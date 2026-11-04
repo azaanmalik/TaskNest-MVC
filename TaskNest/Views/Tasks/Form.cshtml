@@ -1,0 +1,29 @@
+@model TaskItem
+@{
+    bool editing = Model.Id > 0;
+    ViewData["Title"] = editing ? "Edit task" : "New task";
+}
+<section class="form-wrap">
+    <a asp-action="Index" class="back">← Back to dashboard</a>
+    <div class="form-card">
+        <span class="eyebrow">TASK DETAILS</span>
+        <h1>@(editing ? "Edit your task" : "Create a new task")</h1>
+        <p>Give it a clear title and choose what matters most.</p>
+        <form asp-action="@(editing ? "Edit" : "Create")" asp-route-id="@(editing ? Model.Id : null)" method="post">
+            <input asp-for="Id" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="validation"></div>
+            <label asp-for="Title">Task title <span class="required">*</span></label>
+            <input asp-for="Title" placeholder="e.g. Prepare project presentation" maxlength="100" />
+            <span asp-validation-for="Title" class="validation"></span>
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" rows="4" maxlength="500" placeholder="Add details or notes..."></textarea>
+            <span asp-validation-for="Description" class="validation"></span>
+            <div class="form-grid">
+                <div><label asp-for="Category">Category</label><select asp-for="Category"><option>General</option><option>Work</option><option>Personal</option><option>Study</option></select><span asp-validation-for="Category" class="validation"></span></div>
+                <div><label asp-for="Priority">Priority</label><select asp-for="Priority"><option>Low</option><option>Medium</option><option>High</option></select><span asp-validation-for="Priority" class="validation"></span></div>
+            </div>
+            <label asp-for="DueDate">Due date</label><input asp-for="DueDate" type="date" asp-format="{0:yyyy-MM-dd}" />
+            <div class="form-actions"><button type="submit" class="btn btn-primary">@(editing ? "Save changes" : "Create task")</button><a asp-action="Index" class="btn btn-outline">Cancel</a></div>
+        </form>
+    </div>
+</section>
