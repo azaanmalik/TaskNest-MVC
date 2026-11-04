@@ -18,8 +18,8 @@
 Requires [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
 
 ```bash
-git clone https://github.com/azaanmalik/DotNetLearning.git
-cd DotNetLearning
+git clone https://github.com/azaanmalik/TaskNest-MVC.git
+cd TaskNest-MVC
 dotnet run --project TaskNest/TaskNest.csproj
 ```
 
@@ -75,4 +75,4 @@ MIT — [LICENSE.txt](LICENSE.txt). Third-party assets retain their own terms.
 
 ## Verification notes
 
-GitHub file presence and repository structure were checked. A successful runtime build or browser test should only be claimed after execution in a .NET environment. The TaskNest GitHub Actions workflow is configured to build the new application.
+GitHub file presence and repository structure were checked. The TaskNest GitHub Actions .NET 8 restore and build workflow completed successfully. Interactive browser testing has not been performed.
