@@ -1,70 +1,78 @@
-# ASP.NET Core User Registration & Login
+# TaskNest — ASP.NET Core MVC Task Manager
 
-![.NET 8](https://img.shields.io/badge/.NET-8-512BD4?logo=dotnet&logoColor=white) ![C%23](https://img.shields.io/badge/C%23-ASP.NET_Core-239120?logo=csharp&logoColor=white) ![SQL Server](https://img.shields.io/badge/Database-SQL_Server-CC2927?logo=microsoftsqlserver&logoColor=white)
+![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white) ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-MVC-6F42C1) ![C%23](https://img.shields.io/badge/Language-C%23-239120) ![License](https://img.shields.io/badge/License-MIT-green)
 
-A learning project implementing a registration and login workflow using **ASP.NET Core MVC**, **Entity Framework Core**, and **Microsoft SQL Server**. The existing source code, solution, and database migrations are preserved.
+**TaskNest** is a responsive personal task management website built with C#, ASP.NET Core MVC, Razor views and custom CSS. The repository also retains an earlier **User Registration & Login** learning application, unchanged.
 
-## Features and project layout
+## TaskNest highlights
 
-- MVC controllers and Razor views for registration, login, account editing, and deletion.
-- Entity Framework Core SQL Server context and migrations.
-- Custom date validation and session configuration.
-- Bootstrap-based frontend assets.
+- Dashboard with total, active and completed task counters
+- Create, edit, delete and complete tasks
+- Search by title/description; filter by status and priority
+- Category selection, due dates, server-side validation and CSRF protection
+- Responsive UI with no external CSS/JS runtime dependency
+- Self-contained in-memory demo data — **no database required**
 
-```text
-LoginSignup.sln
-UserRegisteration/
-  Controllers/       MVC request handlers
-  Models/            Domain models, EF Core context, validation
-  Migrations/        Database schema history
-  Views/             Razor pages and layouts
-  wwwroot/           CSS, JavaScript and images
-  Program.cs         Application configuration
+## Quick start — TaskNest
+
+Requires [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+
+```bash
+git clone https://github.com/azaanmalik/DotNetLearning.git
+cd DotNetLearning
+dotnet run --project TaskNest/TaskNest.csproj
 ```
 
-## Technology stack
+Open the localhost URL printed in the terminal. Data is in memory and resets after restarting the application. **This is a demo**, not a production multi-user task platform.
 
-| Layer | Technology |
-| --- | --- |
-| Runtime | .NET 8 / ASP.NET Core MVC |
-| Language | C# |
-| UI | Razor views, Bootstrap, CSS, JavaScript |
-| Persistence | Entity Framework Core 8.0.8, SQL Server |
-| Development | Visual Studio or .NET CLI |
+[TaskNest features, structure and architecture](TaskNest/README.md)
 
-## Run locally
+## Repository structure
 
-1. Install the **.NET 8 SDK** and a SQL Server instance (SQL Server Express or Developer Edition).
-2. Clone this repository and open `LoginSignup.sln`, or run the CLI from the repository root.
-3. Configure your **own** database connection using an environment variable or local user secrets. The committed `appsettings.json` contains a machine-specific example and should not be relied upon on another computer.
+```text
+TaskNest/                New standalone task manager (ASP.NET Core MVC)
+  Controllers/           Task routes and validation
+  Models/                TaskItem
+  Services/              Thread-safe in-memory task store
+  Views/                 Razor dashboard, form and layout
+  wwwroot/css/           Responsive design
+  Program.cs             Application startup
+  TaskNest.csproj        .NET 8 web project
+UserRegisteration/       Original SQL Server login/registration demo (preserved)
+LoginSignup.sln          Original solution (preserved)
+docs/ARCHITECTURE.md    Overview of both projects
+SECURITY.md             Security and deployment caveats
+CONTRIBUTING.md         Contribution guidance
+LICENSE.txt             MIT license
+```
 
-   ```bash
-   cd UserRegisteration
-   dotnet user-secrets init
-   dotnet user-secrets set "ConnectionStrings:UserContext" "Server=localhost;Database=UserRegisteration;Trusted_Connection=True;TrustServerCertificate=True"
-   dotnet restore
-   dotnet ef database update
-   dotnet run
-   ```
+## Original registration/login project
 
-   Install `dotnet-ef` if the migration command is unavailable. Adjust the connection string to match your SQL Server configuration.
+The original application uses ASP.NET Core MVC, Entity Framework Core 8 and SQL Server. To run it, configure a local SQL Server connection and then:
 
-4. Open the local URL printed by ASP.NET Core.
+```bash
+dotnet restore LoginSignup.sln
+dotnet run --project UserRegisteration/UserRegisteration.csproj
+```
+
+Its existing `appsettings.json` includes a machine-specific development connection string. Configure your own connection using ASP.NET Core user secrets or environment variables before running. See [security guidance](SECURITY.md); the legacy app is **not production hardened**.
 
 ## Architecture
 
 ```mermaid
-flowchart LR
-    Browser[Browser / Razor Views] --> MVC[ASP.NET Core MVC Controllers]
-    MVC --> Models[Models and Validation]
-    MVC --> EF[EF Core DbContext]
-    EF --> SQL[(SQL Server)]
+flowchart TD
+  Browser[Browser] --> Tasks[TaskNest MVC controller]
+  Tasks --> Store[In-memory task store]
+  Tasks --> Views[TaskNest Razor views]
+  Browser --> Legacy[Legacy UserRegistration MVC]
+  Legacy --> EF[Entity Framework Core]
+  EF --> SQL[(SQL Server)]
 ```
-
-## Security and maintenance notes
-
-**Learning/demo project — not production-hardened.** Review authentication, password handling, input validation, CSRF protection, session security, and error logging before deployment. `Program.cs` currently enables EF Core sensitive-data logging; disable this outside controlled local debugging. Use user secrets or environment variables for credentials; never commit a real `.env` file.
 
 ## License
 
-See the existing [LICENSE.txt](LICENSE.txt). Third-party libraries retain their respective licenses.
+MIT — [LICENSE.txt](LICENSE.txt). Third-party assets retain their own terms.
+
+## Verification notes
+
+GitHub file presence and repository structure were checked. A successful runtime build or browser test should only be claimed after execution in a .NET environment. The TaskNest GitHub Actions workflow is configured to build the new application.
