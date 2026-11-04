@@ -1,0 +1,38 @@
+@model List<TaskItem>
+@{
+    ViewData["Title"] = "Dashboard";
+    int total = (int)ViewBag.Total;
+    int completed = (int)ViewBag.Completed;
+    int active = total - completed;
+}
+<section class="hero">
+    <div><span class="eyebrow">PERSONAL PRODUCTIVITY</span><h1>Make progress, one task at a time.</h1><p>Plan your work, set priorities, and keep your day moving.</p></div>
+    <a class="btn btn-light" asp-action="Create">Create a task <span aria-hidden="true">↗</span></a>
+</section>
+<section class="stats" aria-label="Task statistics">
+    <div class="stat"><span>All tasks</span><strong>@total</strong><small>Across every category</small></div>
+    <div class="stat"><span>In progress</span><strong>@active</strong><small>Still on your list</small></div>
+    <div class="stat"><span>Completed</span><strong>@completed</strong><small>Keep the momentum</small></div>
+</section>
+<section class="panel">
+    <div class="panel-head"><div><h2>Your tasks</h2><p>Stay focused on what matters.</p></div><a asp-action="Create" class="btn btn-primary">+ Add task</a></div>
+    @if (TempData["Notice"] is string notice) { <div class="notice" role="status">@notice</div> }
+    <form method="get" class="filters">
+        <label><span>Search</span><input name="search" value="@ViewBag.Search" placeholder="Search tasks..." /></label>
+        <label><span>Status</span><select name="status"><option value="">All statuses</option><option value="active" selected="@(ViewBag.Status == "active")">Active</option><option value="completed" selected="@(ViewBag.Status == "completed")">Completed</option></select></label>
+        <label><span>Priority</span><select name="priority"><option value="">All priorities</option>@foreach (var p in new[] { "Low", "Medium", "High" }) { <option value="@p" selected="@(ViewBag.Priority == p)">@p</option> }</select></label>
+        <button class="btn btn-dark" type="submit">Filter</button><a asp-action="Index" class="reset">Reset</a>
+    </form>
+    @if (Model.Count == 0) { <div class="empty"><h3>No tasks found</h3><p>Create your first task or adjust your filters.</p><a class="btn btn-primary" asp-action="Create">Add a task</a></div> }
+    else {
+        <div class="task-list">
+            @foreach (var item in Model) {
+                <article class="task @(item.IsCompleted ? "done" : "")">
+                    <form asp-action="Toggle" asp-route-id="@item.Id" method="post"><button class="check" type="submit" aria-label="@(item.IsCompleted ? "Mark incomplete" : "Mark complete")">@(item.IsCompleted ? "✓" : "")</button></form>
+                    <div class="task-content"><div class="task-heading"><h3>@item.Title</h3><span class="pill @item.Priority.ToLowerInvariant()">@item.Priority</span></div><p>@item.Description</p><div class="meta"><span>▦ @item.Category</span><span>◷ @(item.DueDate?.ToString("MMM d, yyyy") ?? "No due date")</span></div></div>
+                    <div class="actions"><a asp-action="Edit" asp-route-id="@item.Id" class="action-link">Edit</a><form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Delete this task?');"><button class="action-link danger" type="submit">Delete</button></form></div>
+                </article>
+            }
+        </div>
+    }
+</section>
