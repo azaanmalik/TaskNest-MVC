@@ -1,0 +1,25 @@
+name: TaskNest .NET build
+on:
+  push:
+    paths:
+      - 'TaskNest/**'
+      - '.github/workflows/tasknest-build.yml'
+  pull_request:
+    paths:
+      - 'TaskNest/**'
+      - '.github/workflows/tasknest-build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore TaskNest/TaskNest.csproj
+      - name: Build
+        run: dotnet build TaskNest/TaskNest.csproj --configuration Release --no-restore --warnaserror
