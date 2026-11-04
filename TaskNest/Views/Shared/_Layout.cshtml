@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="TaskNest — a clean ASP.NET Core MVC task management demo." />
+    <title>@ViewData["Title"] · TaskNest</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="topbar"><div class="shell nav"><a asp-controller="Tasks" asp-action="Index" class="brand"><span class="brand-icon">✓</span> TaskNest</a><span class="nav-caption">Your day, organized.</span><a asp-controller="Tasks" asp-action="Create" class="btn btn-primary">+ New task</a></div></header>
+    <main class="shell">@RenderBody()</main>
+    <footer class="shell footer">TaskNest · Built with ASP.NET Core MVC · Demo data resets on restart</footer>
+</body>
+</html>
